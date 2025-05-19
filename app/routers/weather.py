@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 import requests
 import os
-from app.models.weather import WeatherUnits, parse_weather_data
+from app.models.openweather import WeatherUnits, parse_weather_data
 
 router = APIRouter(prefix="/weather")
 URL = "https://api.openweathermap.org/data/{apiVersion}/weather?appid={apiKey}&units={units}"

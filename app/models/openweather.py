@@ -117,7 +117,6 @@ def parse_weather_data(
         "info": {
             "city": "{}({})".format(data["name"], data["id"]),
             "country": data["sys"]["country"],
-            "timezone": data["timezone"],
             "coordinates": {
                 "latitude": from_lat_to_str(data["coord"]["lat"]),
                 "longitude": from_lon_to_str(data["coord"]["lon"]),
@@ -129,6 +128,7 @@ def parse_weather_data(
             },
         },
         "datetime": {
+            "timezone": data["timezone"],
             "main": data["dt"],
             "sunrise": data["sys"]["sunrise"],
             "sunset": data["sys"]["sunset"],
