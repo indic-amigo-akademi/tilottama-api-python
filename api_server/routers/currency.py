@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models.currency import CurrencyCode
+from api_server.models.currency import CurrencyCode
 import requests
 
 router = APIRouter(prefix="/currency")

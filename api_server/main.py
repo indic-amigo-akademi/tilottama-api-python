@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
-from app.routers import weather, currency, forecast
+from api_server.routers import weather, currency, forecast
 from dotenv import load_dotenv
 import os
 
