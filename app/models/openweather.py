@@ -121,17 +121,15 @@ def parse_weather_data(
                 "latitude": from_lat_to_str(data["coord"]["lat"]),
                 "longitude": from_lon_to_str(data["coord"]["lon"]),
             },
-            "weather": {
-                "main": data["weather"][0]["main"],
-                "description": data["weather"][0]["description"],
-                "icon": ICON_URL.format(icon=data["weather"][0]["icon"]),
-            },
-        },
-        "datetime": {
             "timezone": data["timezone"],
-            "main": data["dt"],
             "sunrise": data["sys"]["sunrise"],
             "sunset": data["sys"]["sunset"],
+        },
+        "datetime": data["dt"],
+        "weather": {
+            "main": data["weather"][0]["main"],
+            "description": data["weather"][0]["description"],
+            "icon": ICON_URL.format(icon=data["weather"][0]["icon"]),
         },
         "visibility": "{:.3f} km".format(data["visibility"] / 1000),
         "temperature": {
@@ -168,3 +166,74 @@ def parse_weather_data(
             "url": "https://openweathermap.org",
         },
     }
+
+
+def parse_forecast_data(
+    data, source="openweathermap", unit: WeatherUnits = WeatherUnits.METRIC
+):
+    res = {
+        "info": {
+            "city": "{}({})".format(data["city"]["name"], data["city"]["id"]),
+            "country": data["city"]["country"],
+            "coordinates": {
+                "latitude": from_lat_to_str(data["city"]["coord"]["lat"]),
+                "longitude": from_lon_to_str(data["city"]["coord"]["lon"]),
+            },
+            "datetime": {
+                "timezone": data["city"]["timezone"],
+                "sunrise": data["city"]["sunrise"],
+                "sunset": data["city"]["sunset"],
+            },
+        },
+        "forecast_list": [],
+        "copyright": {
+            "source": source,
+            "url": "https://openweathermap.org",
+        },
+    }
+
+    for dt_data in data["list"]:
+        res["forecast_list"].append(
+            {
+                "datetime": dt_data["dt"],
+                "weather": {
+                    "main": dt_data["weather"][0]["main"],
+                    "description": dt_data["weather"][0]["description"],
+                    "icon": ICON_URL.format(icon=dt_data["weather"][0]["icon"]),
+                },
+                "visibility": "{:.3f} km".format(dt_data["visibility"] / 1000),
+                "temperature": {
+                    "main": from_temp_to_str(dt_data["main"]["temp"], unit),
+                    "min": from_temp_to_str(dt_data["main"]["temp_min"], unit),
+                    "max": from_temp_to_str(dt_data["main"]["temp_max"], unit),
+                    "feels_like": from_temp_to_str(dt_data["main"]["feels_like"], unit),
+                    "dew_point": from_temp_to_str(
+                        dt_data["main"].get("dew_point", 0), unit
+                    ),
+                },
+                "humidity": "{:.2f} %".format(dt_data["main"]["humidity"]),
+                "pressure": {
+                    "main": from_pressure_to_str(dt_data["main"]["pressure"]),
+                    "sea_level": from_pressure_to_str(dt_data["main"]["sea_level"]),
+                    "ground_level": from_pressure_to_str(dt_data["main"]["grnd_level"]),
+                },
+                "wind": {
+                    "speed": from_speed_to_str(dt_data["wind"]["speed"], unit),
+                    "degree": "{}°".format(dt_data["wind"]["deg"]),
+                    "gust": from_speed_to_str(dt_data["wind"].get("gust", 0), unit),
+                },
+                "clouds": "{} %".format(
+                    dt_data["clouds"]["all"] if "all" in dt_data["clouds"] else 0
+                ),
+                "rain": {
+                    "1h": "{:.2f} mm".format(dt_data.get("rain", {}).get("1h", 0)),
+                    "3h": "{:.2f} mm".format(dt_data.get("rain", {}).get("3h", 0)),
+                },
+                "snow": {
+                    "1h": "{:.2f} mm".format(dt_data.get("snow", {}).get("1h", 0)),
+                    "3h": "{:.2f} mm".format(dt_data.get("snow", {}).get("3h", 0)),
+                },
+            }
+        )
+
+    return res
