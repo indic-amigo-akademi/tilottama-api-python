@@ -39,10 +39,10 @@ async def get_forecast_by_city_name(
             apiVersion="2.5", apiKey=API_TOKEN, units=units.value
         ) + "&q={city_name}".format(city_name=city_name)
 
-        if country_code:
-            url += "," + country_code
         if state_code:
             url += "," + state_code
+        if country_code:
+            url += "," + country_code
 
         response = requests.get(url)
         if response.status_code == 200:
