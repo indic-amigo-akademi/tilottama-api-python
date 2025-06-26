@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
-from app.routers import weather, currency
+from app.routers import weather, currency, forecast
 from dotenv import load_dotenv
 import os
 
@@ -18,6 +18,7 @@ app = FastAPI(
 
 app.include_router(weather.router)
 app.include_router(currency.router)
+app.include_router(forecast.router)
 
 # Mount the static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
