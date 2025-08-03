@@ -1,10 +1,10 @@
 import joblib
 import re
 import spacy
-from utils import words_to_number
+from ml_models.utils import words_to_number
 
-intent_model = spacy.load("./train/intent_model")
-params_model = spacy.load("./train/params_model")
+intent_model = spacy.load("./ml_models/intent_model")
+params_model = spacy.load("./ml_models/params_model")
 
 
 def extract_number(text):
@@ -50,9 +50,9 @@ def predict_intent_and_params(text: str):
     # Extract parameters using NER
     param_doc = params_model(text)
 
-    if predicted_intent == "add":
+    if predicted_intent == "calc:add":
         extracted_params = extract_add_params(param_doc)
-    elif predicted_intent == "weather":
+    elif predicted_intent == "weather:city":
         extracted_params = extract_weather_params(param_doc)
     else:
         extracted_params = []
@@ -60,13 +60,13 @@ def predict_intent_and_params(text: str):
     return predicted_intent, extracted_params
 
 
-if __name__ == "__main__":
-    while True:
-        try:
-            user_text = input("User: ")
-            intent, params = predict_intent_and_params(user_text)
-            print(f"Intent: {intent}")
-            print(f"Params: {params}")
-        except KeyboardInterrupt:
-            print("Exiting...")
-            break
+# if __name__ == "__main__":
+#     while True:
+#         try:
+#             user_text = input("User: ")
+#             intent, params = predict_intent_and_params(user_text)
+#             print(f"Intent: {intent}")
+#             print(f"Params: {params}")
+#         except KeyboardInterrupt:
+#             print("Exiting...")
+#             break

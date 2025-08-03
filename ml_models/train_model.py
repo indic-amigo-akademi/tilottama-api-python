@@ -26,7 +26,7 @@ for entry in training_data:
 ner_training_data = []
 for entry in training_data:
     entities = []
-    if entry["intent"] == "add":
+    if entry["intent"] == "calc:add" and entry["params"]:
         # Simple extraction for numbers (assuming they are digits in the text)
         for param in entry["params"]:
             param_str = str(param)
@@ -35,7 +35,7 @@ for entry in training_data:
             if start_idx != -1:
                 end_idx = start_idx + len(param_str)
                 entities.append((start_idx, end_idx, "NUMBER"))
-    elif entry["intent"] == "weather" and entry["params"]:
+    elif entry["intent"] == "weather:city" and entry["params"]:
             city_name = entry["params"][0]
             start_idx = entry["text"].find(city_name)
             if start_idx != -1:
@@ -44,7 +44,7 @@ for entry in training_data:
 
     if entities:  # Only add if there are entities to train on
         ner_training_data.append((entry["text"], {"entities": entities}))
-print(ner_training_data)
+logging.info(ner_training_data)
 
 # --- Training Intent Classification ---
 nlp_intent = spacy.blank("en")
@@ -72,7 +72,7 @@ for i in range(20):  # Number of training iterations
     # print(f"Iteration {i+1} Losses: {losses}")
 
 logging.info("SpaCy TextCategorizer trained.")
-nlp_intent.to_disk("train/intent_model")
+nlp_intent.to_disk("ml_models/intent_model")
 logging.info("Intent classifier saved.")
 
 
@@ -103,10 +103,10 @@ with nlp_params.disable_pipes(*other_pipes):
         logging.debug(f"Losses at epoch {epoch}: {losses}")
 
 logging.info("SpaCy NER trained.")
-nlp_params.to_disk("train/params_model")
+nlp_params.to_disk("ml_models/params_model")
 logging.info("NER model saved.")
 
 # Example prediction
 doc = nlp_params("add ten and eleven")
 for ent in doc.ents:
-    print(f"Entity: {ent.text}, Label: {ent.label_}")
+    logging.debug(f"Entity: {ent.text}, Label: {ent.label_}")

@@ -1,52 +1,52 @@
 [
     {
         "text": "add 5 and 10",
-        "intent": "add",
+        "intent": "calc:add",
         "params": [5, 10]
     },
     {
         "text": "what is the sum of 3 and 4",
-        "intent": "add",
+        "intent": "calc:add",
         "params": [3, 4]
     },
     {
         "text": "sum of seven and six",
-        "intent": "add",
+        "intent": "calc:add",
         "params": ["seven", "six"]
     },
     {
         "text": "what's the weather in Mumbai",
-        "intent": "weather",
+        "intent": "weather:city",
         "params": ["Mumbai"]
     },
     {
         "text": "how is the weather in Delhi",
-        "intent": "weather",
+        "intent": "weather:city",
         "params": ["Delhi"]
     },
     {
         "text": "exit",
-        "intent": "bye",
+        "intent": "greet:bye",
         "params": []
     },
     {
         "text": "bye",
-        "intent": "bye",
+        "intent": "greet:bye",
         "params": []
     },
     {
         "text": "see you later",
-        "intent": "bye",
+        "intent": "greet:bye",
         "params": []
     },
     {
         "text": "hello there",
-        "intent": "greet",
+        "intent": "greet:hello",
         "params": []
     },
     {
         "text": "hey bot",
-        "intent": "greet",
+        "intent": "greet:hello",
         "params": []
     }
 ]
