@@ -1,0 +1,88 @@
+{% extends "layout/base.j2" %}
+
+{% block title %}Tilottama - Web App{% endblock title %}
+
+{% block styles %}
+<style>
+    main {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .history-screen {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .input-screen {
+        flex: 1;
+        max-height: 8rem;
+    }
+
+    .message-card {
+        max-width: 50%;
+        width: fit-content;
+    }
+
+    .user-message {
+        align-self: flex-end;
+    }
+
+    .bot-message {
+        align-self: flex-start;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<section class="history-screen"></section>
+<section class="input-screen bg-body-tertiary">
+    <form onsubmit="onSendMessage(event)" class="p-3">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Type your message" id="chat-text-input">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </form>
+
+</section>
+{% endblock main %}
+
+{% block scripts %}
+<script>
+    function onSendMessage (event) {
+        event.preventDefault();
+        const chatTextInput = document.querySelector("#chat-text-input");
+        if (chatTextInput) {
+            const inputText = chatTextInput.value;
+            console.log(inputText);
+            addChatMessage(inputText, true);
+            // TODO: Send to backend
+            chatTextInput.value = "";
+            chatTextInput.focus();
+
+        }
+    }
+    function addChatMessage (message, isUser) {
+        const historyScreen = document.querySelector(".history-screen");
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("card", "message-card");
+        messageElement.innerHTML = `
+            <div class="card-body">
+                <h5 class="card-title">${isUser ? "You" : "Tilottama"}</h5>
+                <p class="card-text">${message}</p>
+            </div>
+        `;
+        if (isUser) {
+            messageElement.classList.add("user-message", "bg-primary-subtle");
+        } else {
+            messageElement.classList.add("bot-message", "bg-secondary-subtle");
+        }
+        historyScreen.appendChild(messageElement);
+    }
+</script>
+{% endblock %}
