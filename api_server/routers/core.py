@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 router = APIRouter(
     prefix="/core",
     tags=["Core"],
-    responses={404: {"description": "Not found"}},
+    responses={404: {"description": "Not found"}, 200: {"success": True}},
 )
 
 

@@ -58,14 +58,13 @@ async def api_index():
                     "name": route.name,
                     "path": route.path,
                     "methods": route.methods,
-                    "summary": route.endpoint.__doc__.strip().split("\n")[0],
+                    "summary": route.endpoint.__doc__ is not None and route.endpoint.__doc__.strip().split("\n")[0] or "",
                 }
                 for route in app.routes
                 if route and route.path.startswith(prefix)
             ]
         },
     }
-
 
 @app.get("/", include_in_schema=False)
 async def index(request: Request):
