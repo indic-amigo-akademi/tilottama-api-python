@@ -31,7 +31,10 @@ async def app_intent(request: AppIntent):
 async def app_reply(request: AppIntent):
     intent, params = predict_intent_and_params(request.message)
     if intent == "calc:add":
-        reply = f"The sum of {params[0]} and {params[1]} is {params[0] + params[1]}"
+        if len(params) == 2 and all(isinstance(p, (int, float)) for p in params):
+            reply = f"The sum of {params[0]} and {params[1]} is {params[0] + params[1]}"
+        else:
+            reply = "I couldn't find two numbers to add in your request."
     elif intent == "weather:city":
         reply = f"The weather in {params[0]} is cloudy."
     elif intent == "greet:hello":
