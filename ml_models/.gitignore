@@ -1,0 +1,3 @@
+*.joblib
+params_model/
+intent_model/

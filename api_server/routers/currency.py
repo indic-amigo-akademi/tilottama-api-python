@@ -8,7 +8,7 @@ URL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{dateVersion}/{api
 CONNECTION_ERR = "Couldn't connect to currency exchange server!"
 
 
-@router.get("/")
+@router.get("/", operation_id="get_currency_list")
 async def get_currency_list():
     """
     Get the list of currencies from the API.
@@ -35,7 +35,7 @@ async def get_currency_list():
         return {"success": False, "message": CONNECTION_ERR}
 
 
-@router.get("/{currency_code}")
+@router.get("/{currency_code}", operation_id="get_currency_details")
 async def get_currency_details(currency_code: CurrencyCode):
     """
     Get the details of a specific currency from the API.
@@ -71,7 +71,7 @@ async def get_currency_details(currency_code: CurrencyCode):
         return {"success": False, "message": CONNECTION_ERR}
 
 
-@router.get("/exchange-rate/{from_currency_code}/{to_currency_code}")
+@router.get("/exchange-rate/{from_currency_code}/{to_currency_code}", operation_id="get_exchange_rate")
 async def get_exchange_rate(
     from_currency_code: CurrencyCode, to_currency_code: CurrencyCode
 ):
