@@ -85,8 +85,11 @@ else:
     ner = nlp_params.get_pipe("ner")
 
 # Add new labels
-labels = [x[2] for x in ner_training_data[0][1]["entities"]]
-for label in labels:
+all_labels = set()
+for _, annotations in ner_training_data:
+    for ent in annotations.get('entities', []):
+        all_labels.add(ent[2])
+for label in all_labels:
     ner.add_label(label)
 
 # Disable other pipes during NER training to focus on NER
