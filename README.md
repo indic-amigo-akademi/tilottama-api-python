@@ -4,6 +4,17 @@ Tilottama is a multi utility assistant and uses multiple online resources to fet
 
 ## Endpoints
 
+The API provides the following endpoints:
+
+| Endpoint           | Method | Description                                       |
+| ------------------ | ------ | ------------------------------------------------- |
+| `/`                | `GET`  | Serves the frontend web application's index page. |
+| `/app`             | `GET`  | Serves the main page for the web application.     |
+| `/api/v1`          | `GET`  | Returns a list of all available API routes.       |
+| `/api/v1/weather`  | `GET`  | Fetches the current weather for a given city.     |
+| `/api/v1/forecast` | `GET`  | Fetches the weather forecast for a given city.    |
+| `/api/v1/currency` | `GET`  | Fetches currency exchange rates.                  |
+
 ## Getting Started
 
 - Clone the repository
@@ -40,5 +51,5 @@ fastapi run api_server/main.py --host 127.0.0.1 --port 8080
 - Run the mcp server
 
 ```bash
-python mcp_server/main.py 
+python mcp_server/main.py
 ```
