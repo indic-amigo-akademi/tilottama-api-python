@@ -22,7 +22,7 @@ def extract_add_params(param_doc):
                 extracted_params.append(extract_number(ent.text))
                 print(ent.text)
             except ValueError:
-                pass  # Handle cases where entity recognized as number isn't an int
+                logging.warning(f"Could not extract number from entity: '{ent.text}'")
     return extracted_params
 
 
