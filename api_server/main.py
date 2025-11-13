@@ -70,7 +70,7 @@ async def api_index():
                     or "",
                 }
                 for route in app.routes
-                if route and route.path.startswith(prefix)
+                if route and route.path.startswith(APP_ROOT)
             ]
         },
     }
