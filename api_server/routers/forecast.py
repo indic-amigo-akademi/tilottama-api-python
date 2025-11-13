@@ -16,7 +16,7 @@ FETCH_SUCCESS = "Weather forecast data fetched successfully!"
 CONNECTION_ERR = "Couldn't connect to forecast server!"
 
 
-@router.get("/by-name/{city_name}")
+@router.get("/by-name/{city_name}", operation_id="get_forecast_by_city_name")
 async def get_forecast_by_city_name(
     city_name: str,
     country_code: str | None = None,
@@ -73,7 +73,7 @@ async def get_forecast_by_city_name(
             )
 
 
-@router.get("/by-id/{city_id}")
+@router.get("/by-id/{city_id}", operation_id="get_forecast_by_city_id")
 async def get_forecast_by_city_id(
     city_id: str, units: WeatherUnits = WeatherUnits.METRIC
 ):
@@ -120,7 +120,7 @@ async def get_forecast_by_city_id(
             )
 
 
-@router.get("/by-coordinates/{lat}/{lon}")
+@router.get("/by-coordinates/{lat}/{lon}", operation_id="get_forecast_by_coordinates")
 async def get_forecast_by_coordinates(
     lat: float, lon: float, units: WeatherUnits = WeatherUnits.METRIC
 ):

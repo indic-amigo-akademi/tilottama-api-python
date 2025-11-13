@@ -10,19 +10,26 @@ load_dotenv()
 
 from api_server.routers import weather, currency, forecast, core
 
+# Config
+APP_NAME = os.getenv("APP_NAME", "Tilottama")
+APP_VERSION = os.getenv("APP_VERSION", "1.0.1")
+APP_ROOT = os.getenv(
+    "PREFIX", "/api/v{version}".format(version=APP_VERSION.split(".")[0])
+)
+PORT= int(os.getenv("PORT", 8080))
+
+
 templates = Jinja2Templates(directory="templates")
-version = os.getenv("VERSION", "1.0.0")
-prefix = os.getenv("PREFIX", "/api/v{version}".format(version=version.split(".")[0]))
 app = FastAPI(
-    title="Tilottama API",
-    version=version,
+    title=APP_NAME + " API",
+    version=APP_VERSION,
     swagger_ui_parameters={"syntaxHighlight": {"theme": "dracula"}},
 )
 
-app.include_router(weather.router, prefix=prefix)
-app.include_router(forecast.router, prefix=prefix)
-app.include_router(currency.router, prefix=prefix)
-app.include_router(core.router, prefix=prefix)
+app.include_router(weather.router, prefix=APP_ROOT)
+app.include_router(forecast.router, prefix=APP_ROOT)
+app.include_router(currency.router, prefix=APP_ROOT)
+# app.include_router(core.router, prefix=APP_ROOT)
 
 # Mount the static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -42,7 +49,7 @@ async def favicon():
     return FileResponse("static/favicon.ico")
 
 
-@app.get(prefix, include_in_schema=False)
+@app.get(APP_ROOT, include_in_schema=False)
 async def api_index():
     """
     Get the index page of the API
@@ -58,13 +65,16 @@ async def api_index():
                     "name": route.name,
                     "path": route.path,
                     "methods": route.methods,
-                    "summary": route.endpoint.__doc__ is not None and route.endpoint.__doc__.strip().split("\n")[0] or "",
+                    "summary": route.endpoint.__doc__ is not None
+                    and route.endpoint.__doc__.strip().split("\n")[0]
+                    or "",
                 }
                 for route in app.routes
                 if route and route.path.startswith(prefix)
             ]
         },
     }
+
 
 @app.get("/", include_in_schema=False)
 async def index(request: Request):

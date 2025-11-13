@@ -39,9 +39,9 @@ class WeatherByCityID(BaseModel):
     units: WeatherUnits = WeatherUnits.METRIC
 
 
-@router.post("/by-name/")
+@router.post("/by-name/", operation_id="get_weather_by_city_name")
 async def get_weather_by_city_name(
-    request: WeatherByCity,
+    request: WeatherByCity
 ):
     """
     Get the weather data by City Name from the API.
@@ -90,7 +90,7 @@ async def get_weather_by_city_name(
             )
 
 
-@router.post("/by-id/")
+@router.post("/by-id/", operation_id="get_weather_by_city_id")
 async def get_weather_by_city_id(
     request: WeatherByCityID,
 ):
@@ -133,7 +133,7 @@ async def get_weather_by_city_id(
             )
 
 
-@router.post("/by-coordinates/")
+@router.post("/by-coordinates/", operation_id="get_weather_by_coordinates")
 async def get_weather_by_coordinates(
     request: WeatherByCoordinates,
 ):

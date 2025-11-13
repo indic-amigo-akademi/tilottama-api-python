@@ -31,8 +31,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-- Run the application
+- Run the rest api server
 
 ```bash
-fastapi run api_server/main.py --host 127.0.0.1 --port 8100
+fastapi run api_server/main.py --host 127.0.0.1 --port 8080
+```
+
+- Run the mcp server
+
+```bash
+python mcp_server/main.py 
 ```
