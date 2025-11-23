@@ -6,3 +6,4 @@ httpx
 spacy
 scikit-learn
 fastmcp
+spacy-lookups-data

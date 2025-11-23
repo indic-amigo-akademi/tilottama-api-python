@@ -40,6 +40,13 @@ source venv/bin/activate
 
 ```bash
 pip install -r requirements.txt
+python -m spacy download en_core_web_md
+```
+
+- Run the ml models train to buid initial model
+
+```bash
+python ml_models/train_model.py
 ```
 
 - Run the rest api server
