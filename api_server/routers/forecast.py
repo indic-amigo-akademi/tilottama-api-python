@@ -3,8 +3,18 @@ from fastapi.responses import JSONResponse
 import os
 import httpx
 from api_server.models.openweather import WeatherUnits, parse_forecast_data
+from api_server.models.forecast import (
+    ForecastByCity,
+    ForecastByCityID,
+    ForecastByCoordinates,
+)
 
-router = APIRouter(prefix="/forecast")
+
+router = APIRouter(
+    prefix="/forecast",
+    tags=["Forecast"],
+    responses={404: {"description": "Not found"}},
+)
 URL = "https://api.openweathermap.org/data/{apiVersion}/forecast?appid={apiKey}&units={units}"
 API_TOKEN = os.getenv("OPENWEATHER_API_KEY")
 if not API_TOKEN:
@@ -16,13 +26,8 @@ FETCH_SUCCESS = "Weather forecast data fetched successfully!"
 CONNECTION_ERR = "Couldn't connect to forecast server!"
 
 
-@router.get("/by-name/{city_name}", operation_id="get_forecast_by_city_name")
-async def get_forecast_by_city_name(
-    city_name: str,
-    country_code: str | None = None,
-    state_code: str | None = None,
-    units: WeatherUnits = WeatherUnits.METRIC,
-):
+@router.post("/by-name/{city_name}", operation_id="get_forecast_by_city_name")
+async def get_forecast_by_city_name(request: ForecastByCity):
     """
     Get the weather forecast by City Name from the API.
 
@@ -37,13 +42,13 @@ async def get_forecast_by_city_name(
     """
 
     url = URL.format(
-        apiVersion="2.5", apiKey=API_TOKEN, units=units.value
-    ) + "&q={city_name}".format(city_name=city_name)
+        apiVersion="2.5", apiKey=API_TOKEN, units=request.units.value
+    ) + "&q={city_name}".format(city_name=request.city_name)
 
-    if state_code:
-        url += "," + state_code
-    if country_code:
-        url += "," + country_code
+    if request.state_code:
+        url += "," + request.state_code
+    if request.country_code:
+        url += "," + request.country_code
 
     async with httpx.AsyncClient() as client:
         try:
@@ -52,7 +57,7 @@ async def get_forecast_by_city_name(
                 return {
                     "success": True,
                     "message": FETCH_SUCCESS,
-                    "data": parse_forecast_data(response.json(), unit=units),
+                    "data": parse_forecast_data(response.json(), unit=request.units),
                 }
 
             return JSONResponse(
@@ -73,10 +78,8 @@ async def get_forecast_by_city_name(
             )
 
 
-@router.get("/by-id/{city_id}", operation_id="get_forecast_by_city_id")
-async def get_forecast_by_city_id(
-    city_id: str, units: WeatherUnits = WeatherUnits.METRIC
-):
+@router.post("/by-id/{city_id}", operation_id="get_forecast_by_city_id")
+async def get_forecast_by_city_id(request: ForecastByCityID):
     """
     Get the weather forecast by City ID from the API.
 
@@ -89,8 +92,8 @@ async def get_forecast_by_city_id(
     """
 
     url = URL.format(
-        apiVersion="2.5", apiKey=API_TOKEN, units=units.value
-    ) + "&id={city_id}".format(city_id=city_id)
+        apiVersion="2.5", apiKey=API_TOKEN, units=request.units.value
+    ) + "&id={city_id}".format(city_id=request.city_id)
 
     async with httpx.AsyncClient() as client:
         try:
@@ -99,7 +102,7 @@ async def get_forecast_by_city_id(
                 return {
                     "success": True,
                     "message": FETCH_SUCCESS,
-                    "data": parse_forecast_data(response.json(), unit=units),
+                    "data": parse_forecast_data(response.json(), unit=request.units),
                 }
 
             return JSONResponse(
@@ -120,10 +123,8 @@ async def get_forecast_by_city_id(
             )
 
 
-@router.get("/by-coordinates/{lat}/{lon}", operation_id="get_forecast_by_coordinates")
-async def get_forecast_by_coordinates(
-    lat: float, lon: float, units: WeatherUnits = WeatherUnits.METRIC
-):
+@router.post("/by-coordinates/{lat}/{lon}", operation_id="get_forecast_by_coordinates")
+async def get_forecast_by_coordinates(request: ForecastByCoordinates):
     """
     Get the weather forecast by Coordinates from the API.
 
@@ -137,8 +138,8 @@ async def get_forecast_by_coordinates(
     """
 
     url = URL.format(
-        apiVersion="2.5", apiKey=API_TOKEN, units=units.value
-    ) + "&lat={lat}&lon={lon}".format(lat=lat, lon=lon)
+        apiVersion="2.5", apiKey=API_TOKEN, units=request.units.value
+    ) + "&lat={lat}&lon={lon}".format(lat=request.lat, lon=request.lon)
 
     async with httpx.AsyncClient() as client:
         try:
@@ -147,7 +148,7 @@ async def get_forecast_by_coordinates(
                 return {
                     "success": True,
                     "message": FETCH_SUCCESS,
-                    "data": parse_forecast_data(response.json(), unit=units),
+                    "data": parse_forecast_data(response.json(), unit=request.units),
                 }
 
             return JSONResponse(

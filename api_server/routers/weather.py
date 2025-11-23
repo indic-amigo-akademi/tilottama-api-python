@@ -2,9 +2,13 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 import os
 import httpx
-from api_server.models.openweather import WeatherUnits, parse_weather_data
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from api_server.models.openweather import parse_weather_data
+from api_server.models.weather import (
+    WeatherByCity,
+    WeatherByCityID,
+    WeatherByCoordinates,
+)
+
 
 router = APIRouter(
     prefix="/weather",
@@ -21,28 +25,8 @@ FETCH_SUCCESS = "Weather data fetched successfully!"
 CONNECTION_ERR = "Couldn't connect to weather server!"
 
 
-class WeatherByCity(BaseModel):
-    city_name: str = Field("Kolkata", min_length=2)
-    country_code: Optional[str] = None
-    state_code: Optional[str] = None
-    units: WeatherUnits = WeatherUnits.METRIC
-
-
-class WeatherByCoordinates(BaseModel):
-    lat: float = Field(28.66, ge=-90, le=90)
-    lon: float = Field(77.23, ge=-180, le=180)
-    units: WeatherUnits = WeatherUnits.METRIC
-
-
-class WeatherByCityID(BaseModel):
-    city_id: str = Field("524901", min_length=1)
-    units: WeatherUnits = WeatherUnits.METRIC
-
-
 @router.post("/by-name/", operation_id="get_weather_by_city_name")
-async def get_weather_by_city_name(
-    request: WeatherByCity
-):
+async def get_weather_by_city_name(request: WeatherByCity):
     """
     Get the weather data by City Name from the API.
 

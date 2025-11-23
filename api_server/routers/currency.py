@@ -2,13 +2,15 @@ from fastapi import APIRouter
 from api_server.models.currency import CurrencyCode
 import requests
 
-router = APIRouter(prefix="/currency")
+router = APIRouter(
+    prefix="/currency", tags=["Currency"], responses={404: {"description": "Not found"}}
+)
 URL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{dateVersion}/{apiVersion}/{endpoint}"
 
 CONNECTION_ERR = "Couldn't connect to currency exchange server!"
 
 
-@router.get("/", operation_id="get_currency_list")
+@router.post("/", operation_id="get_currency_list")
 async def get_currency_list():
     """
     Get the list of currencies from the API.
@@ -35,7 +37,7 @@ async def get_currency_list():
         return {"success": False, "message": CONNECTION_ERR}
 
 
-@router.get("/{currency_code}", operation_id="get_currency_details")
+@router.post("/{currency_code}", operation_id="get_currency_details")
 async def get_currency_details(currency_code: CurrencyCode):
     """
     Get the details of a specific currency from the API.
@@ -71,7 +73,10 @@ async def get_currency_details(currency_code: CurrencyCode):
         return {"success": False, "message": CONNECTION_ERR}
 
 
-@router.get("/exchange-rate/{from_currency_code}/{to_currency_code}", operation_id="get_exchange_rate")
+@router.post(
+    "/exchange-rate/{from_currency_code}/{to_currency_code}",
+    operation_id="get_exchange_rate",
+)
 async def get_exchange_rate(
     from_currency_code: CurrencyCode, to_currency_code: CurrencyCode
 ):
