@@ -45,7 +45,7 @@ pip install -r requirements.txt
 - Run the rest api server
 
 ```bash
-fastapi run api_server/main.py --host 127.0.0.1 --port 8080
+fastapi run api_server/main.py --host 127.0.0.1 --port 5050
 ```
 
 - Run the mcp server
